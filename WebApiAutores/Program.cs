@@ -12,7 +12,10 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-startup.Configure(app, app.Environment);
+var servicioLogger = (ILogger<Startup>)app.Services.GetService(typeof(ILogger<Startup>));
+
+startup.Configure(app, app.Environment, servicioLogger
+    );
 
 // Paso el código de "Configure the HTTP request pipeline" a la Clase Startup.cs al método Configure
 

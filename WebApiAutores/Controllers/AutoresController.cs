@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.Entidades;
+using WebApiAutores.Filtros;
 using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/autores")]
+    //[Authorize]
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -27,7 +30,9 @@ namespace WebApiAutores.Controllers
             this.logger = logger;
         }
 
-        [HttpGet("GUID")]
+        [HttpGet("GUID")]   
+        //[ResponseCache(Duration = 10)] //FILTRO.Guarda en cache durante 10 segundos la respuesta de la acción, Durante esos 10 segundos si hay petición le devuelve la respuesta guardada en cache
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public ActionResult ObtenerGuids()
         {
             return Ok( new { 
@@ -43,8 +48,11 @@ namespace WebApiAutores.Controllers
         [HttpGet] //api/autores
         [HttpGet("listado")] //api/autores/listado
         [HttpGet("/listado")] //listado
+        //[ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public async Task<ActionResult<List<Autor>>> Get()
         {
+            throw new NotImplementedException();
             logger.LogInformation("Estamos obteniendo los autores");
            // servicio.RealizarTarea();
             return await context.Autores.Include(x => x.Libros).ToListAsync();

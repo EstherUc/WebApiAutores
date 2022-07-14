@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "x9W6swF6oto/0Ms4IQXtlqGpRM1PRneqHG4I65JJ5NM=",
+  "Hash": "Ep344W0OTz2oQFJxfty/mhPFWLwfq45CX4iRFZ9gwuk=",
   "Source": "WebApiAutores",
   "BasePath": "_content/WebApiAutores",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "WebApiAutores\\wwwroot",
       "Source": "WebApiAutores",
-      "ContentRoot": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\wwwroot\\",
       "BasePath": "_content/WebApiAutores",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\wwwroot\\Archivo 1.txt",
+      "Identity": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\wwwroot\\Archivo 1.txt",
       "SourceId": "WebApiAutores",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\wwwroot\\",
       "BasePath": "_content/WebApiAutores",
       "RelativePath": "Archivo 1.txt",
       "AssetKind": "All",

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\WebApiAutores.csproj": {}
+    "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\WebApiAutores.csproj": {}
   },
   "projects": {
-    "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\WebApiAutores.csproj": {
+    "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\WebApiAutores.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\WebApiAutores.csproj",
+        "projectUniqueName": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\WebApiAutores.csproj",
         "projectName": "WebApiAutores",
-        "projectPath": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\WebApiAutores.csproj",
-        "packagesPath": "C:\\Users\\esucl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\esucl\\source\\repos\\WebApiAutores\\WebApiAutores\\obj\\",
+        "projectPath": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\WebApiAutores.csproj",
+        "packagesPath": "C:\\Users\\esthe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\esucl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\esthe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,6 +44,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.6, )"
@@ -81,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

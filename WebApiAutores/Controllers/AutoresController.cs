@@ -1,105 +1,71 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
 using WebApiAutores.Filtros;
-using WebApiAutores.Servicios;
+
 
 namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/autores")]
-    //[Authorize]
+    
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private readonly IServicio servicio;
-        private readonly ServicioTransient servicioTransient;
-        private readonly ServicioSingleton servicioSingleton;
-        private readonly ServicioScoped servicioScoped;
-        private readonly ILogger<AutoresController> logger;
+        private readonly IMapper mapper;
 
-        public AutoresController(ApplicationDbContext context, IServicio servicio, ServicioTransient servicioTransient,
-            ServicioSingleton servicioSingleton, ServicioScoped servicioScoped, ILogger<AutoresController> logger)
+        public AutoresController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
-            this.servicio = servicio;
-            this.servicioTransient = servicioTransient;
-            this.servicioSingleton = servicioSingleton;
-            this.servicioScoped = servicioScoped;
-            this.logger = logger;
+            this.mapper = mapper;
         }
 
-        [HttpGet("GUID")]   
-        //[ResponseCache(Duration = 10)] //FILTRO.Guarda en cache durante 10 segundos la respuesta de la acción, Durante esos 10 segundos si hay petición le devuelve la respuesta guardada en cache
-        [ServiceFilter(typeof(MiFiltroDeAccion))]
-        public ActionResult ObtenerGuids()
-        {
-            return Ok( new { 
-                    AutoresController_Transient = servicioTransient.Guid,
-                    ServicioA_Transient = servicio.ObtenerTransient(),
-                    AutoresController_Scoped = servicioScoped.Guid,
-                    ServicioA_Scoped = servicio.ObtenerScoped(),
-                    AutoresController_Singleton = servicioSingleton.Guid,                 
-                    ServicioA_Singleton = servicio.ObtenerSingleton()
-            });
-        }
-
+        
         [HttpGet] //api/autores
-        [HttpGet("listado")] //api/autores/listado
-        [HttpGet("/listado")] //listado
-        //[ResponseCache(Duration = 10)]
-        [ServiceFilter(typeof(MiFiltroDeAccion))]
-        public async Task<ActionResult<List<Autor>>> Get()
+ 
+        public async Task<List<AutorDTO>> Get()
         {
-            throw new NotImplementedException();
-            logger.LogInformation("Estamos obteniendo los autores");
-           // servicio.RealizarTarea();
-            return await context.Autores.Include(x => x.Libros).ToListAsync();
+            var autores = await context.Autores.ToListAsync();
+            return mapper.Map<List<AutorDTO>>(autores);
         }
+        
 
-        [HttpGet("primero")] //api/autores/primero?nombre=esther  (esther es un ejemplo, sería lo que escribieran, pero así quedaría la url)
-        public async Task<ActionResult<Autor>> PrimerAutor([FromHeader] int miValor, [FromQuery] string nombre)
+        [HttpGet("{id:int}")] 
+        public async Task<ActionResult<AutorDTO>> Get(int id)
         {
-            return await context.Autores.FirstOrDefaultAsync();
-        }
-
-        [HttpGet("{id:int}/{param2=persona}")] //param2 por defecto persona en este ejemplo. Si quisieramos el parametro opcional se pondría param2? y param2 sin asignar nada ni interrogación para que pongan (manden un parametro) lo que quieran pero si no ponen nada daría error
-        public async Task<ActionResult<Autor>> Get(int id, string param2)
-        {
-            var autor =  await context.Autores.FirstOrDefaultAsync(x => x.Id == id);   
+            var autor =  await context.Autores.FirstOrDefaultAsync(autorBD => autorBD.Id == id);   
 
             if (autor == null)
             {
-                return NotFound();
+                return NotFound(); //devuelve un 404
             }
 
-            return autor;  
+            return mapper.Map<AutorDTO>(autor);  
         }
 
         [HttpGet("{nombre}")]
-        public async Task<ActionResult<Autor>> Get([FromRoute] string nombre) //[FromRoute] significa que el dato va a venir desde la ruta
+        public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre) //[FromRoute] significa que el dato va a venir desde la ruta
         {
-            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+            var autores = await context.Autores.Where(autorBD => autorBD.Nombre.Contains(nombre)).ToListAsync();
 
-            if (autor == null)
-            {
-                return NotFound();
-            }
-
-            return autor;
+            return mapper.Map<List<AutorDTO>>(autores);
         }
 
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Autor autor) //[FromBody] significa que el dato va a venir del cuerpo de la petición http
+        public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacionDTO) //[FromBody] significa que el dato va a venir del cuerpo de la petición http
         {
-            var existeAutorConElMismoNombre = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+            var existeAutorConElMismoNombre = await context.Autores.AnyAsync(x => x.Nombre == autorCreacionDTO.Nombre);
 
             if (existeAutorConElMismoNombre)
             {
-                return BadRequest($"Ya existe un autor con el nombre {autor.Nombre}"); //Es un Error 400
+                return BadRequest($"Ya existe un autor con el nombre {autorCreacionDTO.Nombre}"); //Es un Error 400
             }
+            //hacemos el mapeo con AutoMapper
+            var autor = mapper.Map<Autor>(autorCreacionDTO);
 
             context.Add(autor);
             await context.SaveChangesAsync();

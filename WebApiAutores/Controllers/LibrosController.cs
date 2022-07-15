@@ -19,11 +19,17 @@ namespace WebApiAutores.Controllers
             this.mapper = mapper;
         }
         
-        [HttpGet("{id:int}")]   
-        public async Task<ActionResult<LibroDTO>> Get(int id)
+        [HttpGet("{id:int}", Name = "ObtenerLibro")]   
+        public async Task<ActionResult<LibroDTOConAutores>> Get(int id)
         {
-            var libro = await context.Libros.FirstOrDefaultAsync(x => x.Id == id); // para incluir comentario: .Include(libroBD => libroBD.Comentarios)
-            return mapper.Map<LibroDTO>(libro);
+            var libro = await context.Libros
+                .Include(libroBD => libroBD.AutoresLibros)
+                .ThenInclude(autorLibroBD => autorLibroBD.Autor)
+                .FirstOrDefaultAsync(x => x.Id == id); // para incluir comentario: .Include(libroBD => libroBD.Comentarios)
+            
+            libro.AutoresLibros = libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
+
+            return mapper.Map<LibroDTOConAutores>(libro);
         }
 
         [HttpPost]
@@ -43,8 +49,39 @@ namespace WebApiAutores.Controllers
             }
 
             var libro = mapper.Map<Libro>(libroCreacionDTO);
+            AsignarOrdenAutores(libro);
 
-            if(libro.AutoresLibros != null)
+            context.Add(libro);
+            await context.SaveChangesAsync();
+            
+            var libroDTO = mapper.Map<LibroDTO>(libro);
+
+            return CreatedAtRoute("ObtenerLibro", new { id = libro.Id }, libroDTO);
+        } 
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put (int id, LibroCreacionDTO libroCreacionDTO)
+        {
+            //en libroBD estoy trayendo el libro cuyo id me han pasado y estoy incluyendo el listado de autores, libros... para poder actualizarlo
+            var libroBD = await context.Libros
+                .Include(x => x.AutoresLibros)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(libroBD == null)
+            {
+                return NotFound(); 
+            }
+
+            libroBD = mapper.Map(libroCreacionDTO, libroBD);//con el automapper paso las propiedades de libroCreacionDTO hacia libroBD guardandolo en la instancia libroBD, esto me permite hacer una actualizacion de la entidad Libros y AutoresLibros
+            AsignarOrdenAutores(libroBD);
+
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        private void AsignarOrdenAutores(Libro libro)
+        {
+            if (libro.AutoresLibros != null)
             {
                 for (int i = 0; i < libro.AutoresLibros.Count; i++)
                 {
@@ -52,10 +89,8 @@ namespace WebApiAutores.Controllers
                 }
             }
 
-            context.Add(libro);
-            await context.SaveChangesAsync();
-            return Ok();
-        } 
+
+        }
         
     }
 }

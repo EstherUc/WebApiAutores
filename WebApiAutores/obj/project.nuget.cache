@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "QzbPf/v8SSVAP06OWZ9m17qE5DJk5W2hgs8C+BWWIto+Jnm9qqh5rQx/hM1bT31Adtg6hSA1SSGNf0qCss5BHQ==",
+  "dgSpecHash": "MQOE8F53iO+GVM0lEW4FtEFdM913FhBABI0YFZESyizptgoHLnOBCT8VmLBo9mZJkzFPgXK53Ww6oFPSbbq/BA==",
   "success": true,
   "projectFilePath": "C:\\Users\\esthe\\source\\repos\\WebApiAutores2\\WebApiAutores\\WebApiAutores.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,8 @@
     "C:\\Users\\esthe\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.6\\microsoft.aspnetcore.authentication.jwtbearer.6.0.6.nupkg.sha512",
+    "C:\\Users\\esthe\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\6.0.7\\microsoft.aspnetcore.jsonpatch.6.0.7.nupkg.sha512",
+    "C:\\Users\\esthe\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\6.0.7\\microsoft.aspnetcore.mvc.newtonsoftjson.6.0.7.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",
@@ -38,6 +40,8 @@
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\esthe\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\esthe\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
     "C:\\Users\\esthe\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",

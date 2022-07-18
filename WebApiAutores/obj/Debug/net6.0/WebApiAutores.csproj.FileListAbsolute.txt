@@ -191,3 +191,7 @@ C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\obj\Debug\net6.0\refint
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\obj\Debug\net6.0\WebApiAutores.pdb
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\obj\Debug\net6.0\WebApiAutores.genruntimeconfig.cache
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\obj\Debug\net6.0\ref\WebApiAutores.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

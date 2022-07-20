@@ -43,12 +43,14 @@ namespace WebApiAutores
             app.UseLoguearRespuestaHTTP();
 
             // Configure the HTTP request pipeline.
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()) 
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json","WebApiAutores v1"));
+                
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAutores v1"));
 
             app.UseHttpsRedirection();
 

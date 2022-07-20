@@ -16,16 +16,23 @@ namespace WebApiAutores.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public AutoresController(ApplicationDbContext context, IMapper mapper)
+        public AutoresController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
             this.context = context;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
+        [HttpGet("Configuraciones")]
+        public ActionResult<string> ObtenerConfiguracion()
+        {
+            return configuration["prueba"];
+
+        }
         
         [HttpGet] //api/autores
- 
         public async Task<List<AutorDTO>> Get()
         {
             var autores = await context.Autores.ToListAsync();
@@ -107,9 +114,9 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            context.Remove(new Autor { Id = id });
+            context.Remove(new Autor() { Id = id });
             await context.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
     }
 }

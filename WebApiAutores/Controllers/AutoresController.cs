@@ -26,12 +26,12 @@ namespace WebApiAutores.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet("Configuraciones")]
+        /*[HttpGet("Configuraciones")]
         public ActionResult<string> ObtenerConfiguracion()
         {
             return configuration["prueba"];
 
-        }
+        }*/
         
         [HttpGet] //api/autores
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

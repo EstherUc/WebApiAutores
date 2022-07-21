@@ -14,11 +14,14 @@ namespace WebApiAutores.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public CuentasController(UserManager<IdentityUser> userManager,IConfiguration configuration)
+        public CuentasController(UserManager<IdentityUser> userManager,IConfiguration configuration,
+            SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            this.signInManager = signInManager;
         }
 
         [HttpPost("registrar")] //api/cuentas/resgistrar
@@ -33,10 +36,25 @@ namespace WebApiAutores.Controllers
                 return ConstruirToken(credencialesUsusario);
 
             }
-            else
+           
+            return BadRequest(resultado.Errors);
+            
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<RespuestaAutenticacion>> Login(CredencialesUsusario credencialesUsusario)
+        {
+            var resultado = await  signInManager.PasswordSignInAsync(credencialesUsusario.Email, credencialesUsusario.Password,
+                isPersistent: false, lockoutOnFailure: false); //isPersistent es para la cookie de identificacion (en este caso no usamos)
+                                                               //y lockoutOnFailure que es que el usuario debe de ser bloqueado si los intentos del logeo no son satisfactorios
+
+            if (resultado.Succeeded)
             {
-                return BadRequest(resultado.Errors);
+                return ConstruirToken(credencialesUsusario);
             }
+            
+            return BadRequest("Login incorrecto");
+            
         }
 
         private RespuestaAutenticacion ConstruirToken(CredencialesUsusario credencialesUsusario)

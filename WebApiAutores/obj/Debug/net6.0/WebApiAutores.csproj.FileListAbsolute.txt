@@ -195,3 +195,8 @@ C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Micros
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\esthe\source\repos\WebApiAutores2\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll

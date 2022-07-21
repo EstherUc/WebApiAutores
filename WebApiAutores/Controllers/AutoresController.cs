@@ -12,7 +12,7 @@ namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/autores")]
-    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -34,7 +34,7 @@ namespace WebApiAutores.Controllers
         }*/
         
         [HttpGet] //api/autores
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [AllowAnonymous] //es una excepción del Authorize (lo tenemos puesto a nivel de controlador) y Permite que no autentificados puedan consumir este EndPoint
         public async Task<List<AutorDTO>> Get()
         {
             var autores = await context.Autores.ToListAsync();

@@ -1,2 +1,2 @@
 # WebApiAutores
-CursoWebApi con ASP.Net Core
+EjemploWebApi con ASP.Net Core

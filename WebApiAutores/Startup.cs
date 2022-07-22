@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebApiAutores.Filtros;
@@ -14,6 +15,9 @@ namespace WebApiAutores
     {
         public Startup(IConfiguration configutarion)
         {
+            //limpiar el mapeo por defecto de cleim
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             Configutarion = configutarion;
         }
 

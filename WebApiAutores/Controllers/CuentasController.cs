@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -57,6 +59,22 @@ namespace WebApiAutores.Controllers
             
         }
 
+        //Este HttpGet es para renovar el token (construyendo un nuevo token) en segundo plano (con un nuevo tiempo de expiración)
+        //para que cuando el usuario esta en activo y pasa el tiempo y expira su token no se quede desactivado durante su actividad
+        [HttpGet("RenovarToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<RespuestaAutenticacion> Renovar()
+        {
+            var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
+            var email = emailClaim.Value;
+            var credencialesUsuario = new CredencialesUsusario()
+            {
+                Email = email
+            };
+
+            return ConstruirToken(credencialesUsuario);
+        }
+
         private RespuestaAutenticacion ConstruirToken(CredencialesUsusario credencialesUsusario)
         {
             //listado de Claims. Claim es una información sobre el usuario en la cual podemos confiar
@@ -72,7 +90,7 @@ namespace WebApiAutores.Controllers
             var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["llavejwt"]));
             var creds = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
-            var expiracion = DateTime.UtcNow.AddYears(1);
+            var expiracion = DateTime.UtcNow.AddYears(1); //pongo un año para no estar renovando tokens con frecuencia. Para pruebas
 
             //contruir token
             var securityToken = new JwtSecurityToken(issuer: null, audience: null, claims: claims, 

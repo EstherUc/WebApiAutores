@@ -12,7 +12,7 @@ namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/autores")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
     public class AutoresController: ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -28,7 +28,7 @@ namespace WebApiAutores.Controllers
 
         /*[HttpGet("Configuraciones")]
         public ActionResult<string> ObtenerConfiguracion()
-        {
+        { 
             return configuration["prueba"];
 
         }*/

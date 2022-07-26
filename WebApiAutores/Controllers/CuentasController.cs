@@ -35,7 +35,7 @@ namespace WebApiAutores.Controllers
             if (resultado.Succeeded)
             {
                 //retornamos JWT (Json Web Token)
-                return ConstruirToken(credencialesUsusario);
+                return await ConstruirToken(credencialesUsusario);
 
             }
            
@@ -52,7 +52,7 @@ namespace WebApiAutores.Controllers
 
             if (resultado.Succeeded)
             {
-                return ConstruirToken(credencialesUsusario);
+                return await ConstruirToken(credencialesUsusario);
             }
             
             return BadRequest("Login incorrecto");
@@ -63,7 +63,7 @@ namespace WebApiAutores.Controllers
         //para que cuando el usuario esta en activo y pasa el tiempo y expira su token no se quede desactivado durante su actividad
         [HttpGet("RenovarToken")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<RespuestaAutenticacion> Renovar()
+        public async Task<ActionResult<RespuestaAutenticacion>> Renovar()
         {
             var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
             var email = emailClaim.Value;
@@ -72,10 +72,10 @@ namespace WebApiAutores.Controllers
                 Email = email
             };
 
-            return ConstruirToken(credencialesUsuario);
+            return await ConstruirToken(credencialesUsuario);
         }
 
-        private RespuestaAutenticacion ConstruirToken(CredencialesUsusario credencialesUsusario)
+        private async Task<RespuestaAutenticacion> ConstruirToken(CredencialesUsusario credencialesUsusario)
         {
             //listado de Claims. Claim es una información sobre el usuario en la cual podemos confiar
             //En los Claims no se pone información sensible porque el cliente de la app tmb va a poder ver los claims. No son secrets.
@@ -85,6 +85,12 @@ namespace WebApiAutores.Controllers
                 //par clave, valor
                 new Claim("email", credencialesUsusario.Email),
             };
+
+            var usuario = await userManager.FindByEmailAsync(credencialesUsusario.Email);
+            var claimsBD = await userManager.GetClaimsAsync(usuario);
+
+            claims.AddRange(claimsBD);
+
 
             //Contruir JWT
             var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["llavejwt"]));
@@ -101,6 +107,22 @@ namespace WebApiAutores.Controllers
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 Expiracion = expiracion
             };
+        }
+
+        [HttpPost("HacerAdmin")]
+        public async Task<ActionResult> HacerAdmin(EditarAdminDTO editarAdminDTO)
+        {
+            var usuario = await userManager.FindByEmailAsync(editarAdminDTO.Email);
+            await userManager.AddClaimAsync(usuario, new Claim("esAdmin", "1"));
+            return NoContent();
+        }
+
+        [HttpPost("EliminarAdmin")]
+        public async Task<ActionResult> EliminarAdmin(EditarAdminDTO editarAdminDTO)
+        {
+            var usuario = await userManager.FindByEmailAsync(editarAdminDTO.Email);
+            await userManager.RemoveClaimAsync(usuario, new Claim("esAdmin", "1"));
+            return NoContent();
         }
     }
 }

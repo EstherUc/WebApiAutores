@@ -96,6 +96,23 @@ namespace WebApiAutores
             services.AddAuthorization(opciones => {
                 opciones.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
             });
+
+            //services.AddDataProtection();
+            //services.AddTransient<HashService>();
+
+            //Configurar servicio CORS (Cross-Origin Resource Sharing o Intercambio de Recursos de Origen Cruzado) 
+            services.AddCors(opciones =>
+            {
+                opciones.AddDefaultPolicy(builder =>
+                {
+                    //WithOrigins son las webs que van a poder tener acceso a nuestra webAPI
+                    //AllowAnyMethod se refiere a metodos HTTP como get, post, delete, etc
+                    //AllowAnyHeader para exponer cabeceras que necesitas devolver desde la webApi (no usamos en este caso)
+                    builder.WithOrigins("https://www.apirequest.io").AllowAnyMethod();
+                });
+            }); 
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -114,7 +131,9 @@ namespace WebApiAutores
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();   
+            app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

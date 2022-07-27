@@ -97,6 +97,9 @@ namespace WebApiAutores
                 opciones.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
             });
 
+            //Configurar protección de datos (con esto tenemos acceso a los servicios de protección de datos)
+            services.AddDataProtection();
+
             //services.AddDataProtection();
             //services.AddTransient<HashService>();
 

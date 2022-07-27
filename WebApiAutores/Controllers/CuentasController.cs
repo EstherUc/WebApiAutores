@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,14 +18,52 @@ namespace WebApiAutores.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly IDataProtector dataProtector;
 
         public CuentasController(UserManager<IdentityUser> userManager,IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager, IDataProtectionProvider dataProtectionProvider)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
+            dataProtector = dataProtectionProvider.CreateProtector("valor_unico_y_quizas_secreto");//se pondria un string con valor aleatorio o algo por el estilo
         }
+
+        //prueba encriptación
+        [HttpGet("encriptar")]
+        public ActionResult Encriptar()
+        {
+            var textoPlano = "Esther Uclés";
+            var textoCifrado = dataProtector.Protect(textoPlano);
+            var textoDesencriptado = dataProtector.Unprotect(textoCifrado);
+
+            return Ok(new
+            {
+                textoPlano = textoPlano,
+                textoCifrado = textoCifrado,
+                textoDesencriptado = textoDesencriptado
+            });
+        }
+
+        //prueba encriptación por tiempo
+        [HttpGet("encriptarPorTiempo")]
+        public ActionResult EncriptarPorTiempo()
+        {
+            var protectorLimitadoPorTiempo = dataProtector.ToTimeLimitedDataProtector();
+
+            var textoPlano = "Esther Uclés";
+            var textoCifrado = protectorLimitadoPorTiempo.Protect(textoPlano, lifetime: TimeSpan.FromSeconds(5));
+            //Thread.Sleep(6000);//con esto se paraliza 6 segundos el hilo que se esta ejecutando (para probar el tiempo de encriptado y vemos que da una excepcion de expired)
+            var textoDesencriptado = protectorLimitadoPorTiempo.Unprotect(textoCifrado);
+
+            return Ok(new
+            {
+                textoPlano = textoPlano,
+                textoCifrado = textoCifrado,
+                textoDesencriptado = textoDesencriptado
+            });
+        }
+
 
         [HttpPost("registrar")] //api/cuentas/resgistrar
         public async Task<ActionResult<RespuestaAutenticacion>> Registrar(CredencialesUsusario credencialesUsusario)

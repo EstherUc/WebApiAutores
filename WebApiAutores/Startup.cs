@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using WebApiAutores.Filtros;
 using WebApiAutores.Middlewares;
+using WebApiAutores.Servicios;
 
 namespace WebApiAutores
 {
@@ -100,8 +101,8 @@ namespace WebApiAutores
             //Configurar protección de datos (con esto tenemos acceso a los servicios de protección de datos)
             services.AddDataProtection();
 
-            //services.AddDataProtection();
-            //services.AddTransient<HashService>();
+            //Configurar servicio par Hash
+            services.AddTransient<HashService>();
 
             //Configurar servicio CORS (Cross-Origin Resource Sharing o Intercambio de Recursos de Origen Cruzado) 
             services.AddCors(opciones =>

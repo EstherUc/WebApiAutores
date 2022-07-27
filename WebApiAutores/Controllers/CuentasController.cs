@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApiAutores.DTOs;
+using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
@@ -18,16 +19,36 @@ namespace WebApiAutores.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly HashService hashService;
         private readonly IDataProtector dataProtector;
 
         public CuentasController(UserManager<IdentityUser> userManager,IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager, IDataProtectionProvider dataProtectionProvider)
+            SignInManager<IdentityUser> signInManager, IDataProtectionProvider dataProtectionProvider,
+            HashService hashService)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
+            this.hashService = hashService;
             dataProtector = dataProtectionProvider.CreateProtector("valor_unico_y_quizas_secreto");//se pondria un string con valor aleatorio o algo por el estilo
         }
+
+        [HttpGet("hash/{textoPlano}")]
+        public ActionResult RealizarHash(string textoPlano)
+        {
+            //llega el textoPlano del cliente, le hago dos veces hash, para ver que al hacer dos hash construye dos sal aleatoria que van a ser distintas y por consiguiente el resultado de los hash tb seran distintos
+            var resultado1 = hashService.Hash(textoPlano);
+            var resultado2 = hashService.Hash(textoPlano);
+
+            return Ok(new
+            {
+                textoPlano = textoPlano,
+                Hash1 = resultado1,
+                Hash2 = resultado2
+            });
+
+        }
+
 
         //prueba encriptación
         [HttpGet("encriptar")]

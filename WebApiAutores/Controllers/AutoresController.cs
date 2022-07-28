@@ -33,7 +33,7 @@ namespace WebApiAutores.Controllers
 
         }*/
         
-        [HttpGet] //api/autores
+        [HttpGet(Name = "obtenerAutores")] //api/autores
         [AllowAnonymous] //es una excepción del Authorize (lo tenemos puesto a nivel de controlador) y Permite que no autentificados puedan consumir este EndPoint
         public async Task<List<AutorDTO>> Get()
         {
@@ -42,7 +42,7 @@ namespace WebApiAutores.Controllers
         }
         
 
-        [HttpGet("{id:int}", Name = "obtenerAutor")] 
+        [HttpGet("{id:int}", Name = "obtenerAutorPorId")] 
         public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
         {
             var autor =  await context.Autores
@@ -58,7 +58,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<AutorDTOConLibros>(autor);  
         }
 
-        [HttpGet("{nombre}")]
+        [HttpGet("{nombre}", Name = "obtenerAutorPorNombre")]
         public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre) //[FromRoute] significa que el dato va a venir desde la ruta
         {
             var autores = await context.Autores.Where(autorBD => autorBD.Nombre.Contains(nombre)).ToListAsync();
@@ -67,7 +67,7 @@ namespace WebApiAutores.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost(Name = "crearAutor")]
         public async Task<ActionResult> Post([FromBody] AutorCreacionDTO autorCreacionDTO) //[FromBody] significa que el dato va a venir del cuerpo de la petición http
         {
             var existeAutorConElMismoNombre = await context.Autores.AnyAsync(x => x.Nombre == autorCreacionDTO.Nombre);
@@ -87,7 +87,7 @@ namespace WebApiAutores.Controllers
             return CreatedAtRoute("obtenerAutor", new { id = autor.Id }, autorDTO);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "actualizarAutor")]
         public async Task<ActionResult> Put(AutorCreacionDTO autorCreacionDTO, int id)
         {
 
@@ -106,7 +106,7 @@ namespace WebApiAutores.Controllers
             return NoContent(); //retorna un 204
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}", Name = "borrarAutor")]
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await context.Autores.AnyAsync(autor => autor.Id == id);

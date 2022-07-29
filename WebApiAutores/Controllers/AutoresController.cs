@@ -55,7 +55,31 @@ namespace WebApiAutores.Controllers
                 return NotFound(); //devuelve un 404
             }
 
-            return mapper.Map<AutorDTOConLibros>(autor);  
+            var dto = mapper.Map<AutorDTOConLibros>(autor);
+            GenerarEnlaces(dto);
+
+            return dto;
+        }
+
+        private void GenerarEnlaces(AutorDTO autorDTO)
+        {
+            //Enlace obtener autor
+            autorDTO.Enlaces.Add(new DatoHATEOAS(
+                enlace: Url.Link("obtenerAutorPorId", new { id = autorDTO.Id }), 
+                descripcion: "self", 
+                metodo: "GET"));
+
+            //Enlace actualizar autor
+            autorDTO.Enlaces.Add(new DatoHATEOAS(
+                enlace: Url.Link("actualizarAutor", new { id = autorDTO.Id }),
+                descripcion: "autor-actualizar",
+                metodo: "PUT"));
+
+            //Enlace borrar autor
+            autorDTO.Enlaces.Add(new DatoHATEOAS(
+                enlace: Url.Link("borrarAutor", new { id = autorDTO.Id }),
+                descripcion: "self",
+                metodo: "DELETE"));
         }
 
         [HttpGet("{nombre}", Name = "obtenerAutorPorNombre")]

@@ -17,13 +17,13 @@ namespace WebApiAutores.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        private readonly IConfiguration configuration;
+        private readonly IAuthorizationService authorizationService;
 
-        public AutoresController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
+        public AutoresController(ApplicationDbContext context, IMapper mapper, IAuthorizationService authorizationService)
         {
             this.context = context;
             this.mapper = mapper;
-            this.configuration = configuration;
+            this.authorizationService = authorizationService;
         }
 
         /*[HttpGet("Configuraciones")]
@@ -35,14 +35,34 @@ namespace WebApiAutores.Controllers
         
         [HttpGet(Name = "obtenerAutores")] //api/autores
         [AllowAnonymous] //es una excepción del Authorize (lo tenemos puesto a nivel de controlador) y Permite que no autentificados puedan consumir este EndPoint
-        public async Task<List<AutorDTO>> Get()
+        public async Task<ColeccionDeRecursos<AutorDTO>> Get()
         {
             var autores = await context.Autores.ToListAsync();
-            return mapper.Map<List<AutorDTO>>(autores);
+            var dtos = mapper.Map<List<AutorDTO>>(autores);
+            var esAdmin = await authorizationService.AuthorizeAsync(User, "esAdmin");
+
+            dtos.ForEach(dto => GenerarEnlaces(dto,esAdmin.Succeeded));//Por cada autor de la lista generamos un enlace para dicho autor
+
+            var resultado = new ColeccionDeRecursos<AutorDTO> { Valores = dtos};
+            resultado.Enlaces.Add(new DatoHATEOAS(
+                enlace: Url.Link("obtenerAutores", new { }),
+                descripcion: "self",
+                metodo: "GET"));
+
+            if (esAdmin.Succeeded)
+            {
+                resultado.Enlaces.Add(new DatoHATEOAS(
+               enlace: Url.Link("crearAutor", new { }),
+               descripcion: "crear-autor",
+               metodo: "POST"));
+            }
+
+            return resultado;
         }
         
 
-        [HttpGet("{id:int}", Name = "obtenerAutorPorId")] 
+        [HttpGet("{id:int}", Name = "obtenerAutorPorId")]
+        [AllowAnonymous]
         public async Task<ActionResult<AutorDTOConLibros>> Get(int id)
         {
             var autor =  await context.Autores
@@ -56,12 +76,13 @@ namespace WebApiAutores.Controllers
             }
 
             var dto = mapper.Map<AutorDTOConLibros>(autor);
-            GenerarEnlaces(dto);
+            var esAdmin = await authorizationService.AuthorizeAsync(User, "esAdmin");
+            GenerarEnlaces(dto,esAdmin.Succeeded);
 
             return dto;
         }
 
-        private void GenerarEnlaces(AutorDTO autorDTO)
+        private void GenerarEnlaces(AutorDTO autorDTO, bool esAdmin)
         {
             //Enlace obtener autor
             autorDTO.Enlaces.Add(new DatoHATEOAS(
@@ -69,17 +90,22 @@ namespace WebApiAutores.Controllers
                 descripcion: "self", 
                 metodo: "GET"));
 
-            //Enlace actualizar autor
-            autorDTO.Enlaces.Add(new DatoHATEOAS(
-                enlace: Url.Link("actualizarAutor", new { id = autorDTO.Id }),
-                descripcion: "autor-actualizar",
-                metodo: "PUT"));
+            if (esAdmin)
+            {
+                //Enlace actualizar autor
+                autorDTO.Enlaces.Add(new DatoHATEOAS(
+                    enlace: Url.Link("actualizarAutor", new { id = autorDTO.Id }),
+                    descripcion: "autor-actualizar",
+                    metodo: "PUT"));
 
-            //Enlace borrar autor
-            autorDTO.Enlaces.Add(new DatoHATEOAS(
-                enlace: Url.Link("borrarAutor", new { id = autorDTO.Id }),
-                descripcion: "self",
-                metodo: "DELETE"));
+                //Enlace borrar autor
+                autorDTO.Enlaces.Add(new DatoHATEOAS(
+                    enlace: Url.Link("borrarAutor", new { id = autorDTO.Id }),
+                    descripcion: "self",
+                    metodo: "DELETE"));
+            }
+
+            
         }
 
         [HttpGet("{nombre}", Name = "obtenerAutorPorNombre")]

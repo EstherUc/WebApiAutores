@@ -35,37 +35,12 @@ namespace WebApiAutores.Controllers
         
         [HttpGet(Name = "obtenerAutores")] //api/autores
         [AllowAnonymous] //es una excepción del Authorize (lo tenemos puesto a nivel de controlador) y Permite que no autentificados puedan consumir este EndPoint
-        public async Task<IActionResult> Get([FromQuery] bool incluirHATEOAS = true)
+        [ServiceFilter(typeof(HATEOASAutorFilterAttribute))]
+        public async Task<ActionResult<List<AutorDTO>>> Get([FromHeader] string incluirHATEOAS)
         {
             var autores = await context.Autores.ToListAsync();
-            var dtos = mapper.Map<List<AutorDTO>>(autores);
-            
-
-            if (incluirHATEOAS)
-            {
-                var esAdmin = await authorizationService.AuthorizeAsync(User, "esAdmin");
-
-                //dtos.ForEach(dto => GenerarEnlaces(dto, esAdmin.Succeeded));//Por cada autor de la lista generamos un enlace para dicho autor
-
-                var resultado = new ColeccionDeRecursos<AutorDTO> { Valores = dtos };
-                resultado.Enlaces.Add(new DatoHATEOAS(
-                    enlace: Url.Link("obtenerAutores", new { }),
-                    descripcion: "self",
-                    metodo: "GET"));
-
-                if (esAdmin.Succeeded)
-                {
-                    resultado.Enlaces.Add(new DatoHATEOAS(
-                   enlace: Url.Link("crearAutor", new { }),
-                   descripcion: "crear-autor",
-                   metodo: "POST"));
-                }
-
-                return Ok(resultado);
-
-            }
-
-            return Ok(dtos);
+            return mapper.Map<List<AutorDTO>>(autores);
+   
         }
         
 
@@ -92,7 +67,7 @@ namespace WebApiAutores.Controllers
        
 
         [HttpGet("{nombre}", Name = "obtenerAutorPorNombre")]
-        public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre) //[FromRoute] significa que el dato va a venir desde la ruta
+        public async Task<ActionResult<List<AutorDTO>>> GetPorNombre([FromRoute] string nombre) //[FromRoute] significa que el dato va a venir desde la ruta
         {
             var autores = await context.Autores.Where(autorBD => autorBD.Nombre.Contains(nombre)).ToListAsync();
 
